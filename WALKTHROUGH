@@ -1,0 +1,31 @@
+client (SOFTWARE)(WEB UI) ----> CENTRAL SERVER ----> MULTIPLE NODES
+
+----------------------------- SENDING ----------------------------------------
+
+CLIENT ---> DATA 
+(as sender)
+
+CENTRAL ---> TAKE DATA FROM CLIENT
+             ENCRYPT DATA
+             BREAK DATA INTO PIECES
+             DISTRIBUTE AMONG NODES
+             
+NODE ---> CONNECT TO SERVER
+          TELL SERVER THAT I AM READY
+          STORE DATA IN A SPECIFIC FOLDER ON ITS LOCAL HARDDISK
+            
+----------------------------- RECEIVING -----------------------------------------
+
+CLIENT --->  REQUEST FOR DATA
+
+CENTRAL ---> DETERMINE HOW MANY PIECES
+             DETERMINE WHERE EVERY PIECE IS
+             DETERMINE ONLINE HOSTS
+             SEND DATA RETRIVAL COMMAND TO HOST
+             GET ALL THE PIECES
+             ASSEMBLE THEM
+             DECRYPT THEM
+             SEND TO CLIENT
+
+NODE ---> RECEIVES DATA RETRIVAL COMMAND
+          UPLOADS THE DATA TO CENTRAL
