@@ -33,7 +33,8 @@ func checkError(err error) {
 // TASK 2 : BREAKING AN IMAGE INTO MULTIPLE FILES 
 // func main() {
 
-// 	img, err := os.Open("assets/1.png")
+// 	var fileName = "2.png"
+// 	img, err := os.Open(fmt.Sprintf("assets/%s", fileName))
 // 	checkError(err)
 // 	defer img.Close()
 
@@ -44,7 +45,7 @@ func checkError(err error) {
 // 	buffer := make([]byte, size)
 
 // 	img.Read(buffer)
-// 	os.Mkdir("assets/img_1", os.FileMode(0777))
+// 	os.Mkdir(fmt.Sprintf("assets/img_%s", fileName), os.FileMode(0777))
 // 	var singleFileSize int64 = size / 10
 
 // 	count := int64(0)
@@ -56,7 +57,7 @@ func checkError(err error) {
 // 			singleChunk = buffer[i:]
 // 		}
 // 		fmt.Println("Written range : ", i, i+singleFileSize)
-// 		file, err := os.Create(fmt.Sprintf("assets/img_1/img_%d", count))
+// 		file, err := os.Create(fmt.Sprintf("assets/img_%s/img_%d",fileName, count))
 // 		checkError(err)
 // 		file.Write(singleChunk)
 // 		file.Close()
@@ -67,14 +68,16 @@ func checkError(err error) {
 
 // TASK 3 : COMBINING IMAGE 
 // func main() {
-// 	files, err := os.ReadDir("assets/img_1")
+
+// 	var fileName = "2.png"
+// 	files, err := os.ReadDir(fmt.Sprintf("assets/img_%s", fileName))
 // 	var imgName = "constructed_img.png"
 // 	var finalBuffer []byte
 // 	checkError(err)
 // 	for index, file := range files {
 // 		fmt.Println(file, index)
 
-// 		singleChunk, err := os.Open(fmt.Sprintf("assets/img_1/%s", file.Name()))
+// 		singleChunk, err := os.Open(fmt.Sprintf("assets/img_%s/%s",fileName ,file.Name()))
 // 		checkError(err)
 
 // 		singleChunkSize, err := singleChunk.Stat()
