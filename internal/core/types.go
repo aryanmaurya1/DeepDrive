@@ -24,7 +24,7 @@ type File struct {
 
 // FileChunk : A single encrypted piece of file, stored on nodes.
 type FileChunk struct {
-	ChunkId       string `json:"chunck_id"`
+	ChunkId       int64  `json:"chunck_id"`
 	OriginalName  string `json:"original_name"`
 	EncryptedName string `json:"encrypted_name"`
 	Index         int    `json:"index"`

@@ -4,7 +4,9 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"ourtool/internal/core"
 	"path"
+	"time"
 )
 
 // Datatype for configuring the 'DivideAndWrite' function's working
@@ -26,9 +28,10 @@ func checkError(err error) {
 	}
 }
 
-func DivideAndWrite(config DivideAndWriteConfig) int {
+func DivideAndWrite(config DivideAndWriteConfig) []core.FileChunk {
 
-	folderPath := path.Join(config.BaseDirectory, (config.FileName + ".dir"))
+	var chunks []core.FileChunk // This slice will be returned from function
+	folderPath := path.Join(config.BaseDirectory, (config.FileName + "_dir"))
 	size := len(config.Data)
 	singleFileSize := config.BufferSize
 
@@ -50,6 +53,7 @@ func DivideAndWrite(config DivideAndWriteConfig) int {
 	var count int
 	for i := 0; i < size; {
 		var singleChunk []byte
+		var chunk core.FileChunk
 		if (i + singleFileSize) < size {
 			singleChunk = config.Data[i : i+singleFileSize]
 		} else {
@@ -57,6 +61,10 @@ func DivideAndWrite(config DivideAndWriteConfig) int {
 		}
 
 		singleFilename := fmt.Sprintf("%s_%d", config.FileName, count)
+
+		chunk.OriginalName = singleFilename   // storing original name of chunk
+		chunk.Index = count                   // Storing ChunkId, it will be equal to 'count' not 'i'
+		chunk.ChunkId = time.Now().UnixNano() // Setting ChunkId equal to its creation time
 
 		file, err := os.Create(path.Join(folderPath, singleFilename))
 		singleChunk = append(config.Metadata, singleChunk...)
@@ -71,6 +79,7 @@ func DivideAndWrite(config DivideAndWriteConfig) int {
 
 		i = i + singleFileSize
 		count++
+		chunks = append(chunks, chunk)
 	}
-	return count
+	return chunks
 }
