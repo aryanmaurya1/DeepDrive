@@ -3,6 +3,7 @@ package divmer
 import (
 	"fmt"
 	"log"
+	"math/rand"
 	"os"
 	"ourtool/internal/core"
 	"path"
@@ -61,10 +62,9 @@ func DivideAndWrite(config DivideAndWriteConfig) []core.FileChunk {
 		}
 
 		singleFilename := fmt.Sprintf("%s_%d", config.FileName, count)
-
-		chunk.OriginalName = singleFilename   // storing original name of chunk
-		chunk.Index = count                   // Storing ChunkId, it will be equal to 'count' not 'i'
-		chunk.ChunkId = time.Now().UnixNano() // Setting ChunkId equal to its creation time
+		chunk.OriginalName = singleFilename                                     // storing original name of chunk
+		chunk.Index = count                                                     // Storing ChunkId, it will be equal to 'count' not 'i'
+		chunk.ChunkId = fmt.Sprintf("%d_%d", rand.Int(), time.Now().UnixNano()) // Setting ChunkId equal to random number plus its creation time
 
 		file, err := os.Create(path.Join(folderPath, singleFilename))
 		singleChunk = append(config.Metadata, singleChunk...)

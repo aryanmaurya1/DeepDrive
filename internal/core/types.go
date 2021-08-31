@@ -1,13 +1,13 @@
 package core
 
 type Node struct {
-	NodeId int    `json:"node_id"`
+	NodeId string `json:"node_id"`
 	Name   string `json:"name"`
 }
 
 // User : Represents a single user who wants to store his files.
 type User struct {
-	UserId   int    `json:"user_id"`
+	UserId   string `json:"user_id"`
 	Password string `json:"password"`
 	Seed     string `json:"seed"`
 	Files    []File `json:"files"`
@@ -15,7 +15,7 @@ type User struct {
 
 // File : A single file which user has uploaded, and wants to store on cloud.
 type File struct {
-	FileId         int         `json:"file_id"`
+	FileId         string      `json:"file_id"`
 	Name           string      `json:"name"`
 	NumberOfPieces int         `json:"number_of_pieces"`
 	CreatedAt      int64       `json:"created_at"` // Unixnano time
@@ -24,7 +24,7 @@ type File struct {
 
 // FileChunk : A single encrypted piece of file, stored on nodes.
 type FileChunk struct {
-	ChunkId       int64  `json:"chunck_id"`
+	ChunkId       string `json:"chunck_id"`
 	OriginalName  string `json:"original_name"`
 	EncryptedName string `json:"encrypted_name"`
 	Index         int    `json:"index"`
