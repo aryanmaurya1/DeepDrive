@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os"
 	"path"
-	"sort"
 )
 
 type ReadAndMergeConfig struct {
@@ -12,6 +11,7 @@ type ReadAndMergeConfig struct {
 	WritePath     string              `json:"writePath"`
 	BaseDirectory string              `json:"baseDirectory"`
 	FileName      string              `json:"filename"`
+	ReadingOrder  []string            `json:"readingOrder"` // Order in which read of files must be performed
 	OutputRef     *os.File            `json:"-"`
 	PipeFn        func([]byte) []byte `json:"-"`
 }
@@ -30,18 +30,19 @@ func ReadAndMerge(config ReadAndMergeConfig) *os.File {
 	if len(config.WritePath) == 0 {
 		config.WritePath = config.BaseDirectory
 	}
+	var combinedFile []byte // This slice will hold combined file and will be written to disk
 	folderPath := path.Join(config.BaseDirectory, (config.FileName + "_dir"))
-	files, err := os.ReadDir(folderPath)
-	checkError(err)
+	writePath := path.Join(config.WritePath, config.FileName)
 
-	sort.SliceStable(files, func(i, j int) bool {
-		i_info, _ := files[i].Info()
-		j_info, _ := files[j].Info()
-		return i_info.ModTime().UnixNano() < j_info.ModTime().UnixNano()
-	})
-	for i, v := range files {
-		info, _ := v.Info()
-		fmt.Println(i, info.ModTime().UnixNano(), v.Name())
+	for _, filename := range config.ReadingOrder {
+		chunkData, _ := os.ReadFile(path.Join(folderPath, filename))
+		chunkData = config.PipeFn(chunkData)
+		combinedFile = append(combinedFile, chunkData...)
+
+		fmt.Fprintf(config.OutputRef, "Processed File : %s \n", path.Join(folderPath, filename))
 	}
-	return nil
+	writeFile, err := os.Create(writePath)
+	checkError(err)
+	writeFile.Write(combinedFile)
+	return writeFile
 }

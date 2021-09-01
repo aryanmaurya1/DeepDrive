@@ -17,3 +17,19 @@ func GetSizeFromLength(buffer []byte) (int, int) {
 	// returns size in Kb and Mb
 	return size / (1024), size / (1024 * 1024)
 }
+
+func GetOriginalNameList(c []FileChunk) []string {
+	var names []string
+	for _, name := range c {
+		names = append(names, name.OriginalName)
+	}
+	return names
+}
+
+func GetEncNameList(c []FileChunk) []string {
+	var names []string
+	for _, name := range c {
+		names = append(names, name.EncryptedName)
+	}
+	return names
+}
