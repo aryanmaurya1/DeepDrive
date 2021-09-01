@@ -5,16 +5,22 @@ import (
 	"os"
 	"ourtool/internal/core"
 	"ourtool/internal/divmer"
+	"path"
 )
+
+const filename string = "Geoffrey Lessel - Phoenix in Action (2018, Manning).pdf"
+const readBaseDir string = "original"
+const mergeBaseDir string = "merged"
+const brokenBaseDir string = "broken"
 
 func main() {
 	logfile, _ := os.Create("logs")
 	defer logfile.Close()
-	img := core.ReadFile("assets/2.png")
+	img := core.ReadFile(path.Join(readBaseDir, filename))
 	var writingConfig divmer.DivideAndWriteConfig
 
-	writingConfig.BaseDirectory = "assets"
-	writingConfig.FileName = "2.png"
+	writingConfig.BaseDirectory = brokenBaseDir
+	writingConfig.FileName = filename
 	writingConfig.Data = img
 	writingConfig.BufferSize = 1024 * 256 // 5MB
 	writingConfig.Metadata = nil
@@ -28,9 +34,9 @@ func main() {
 
 	var mergingConfig divmer.ReadAndMergeConfig
 
-	mergingConfig.BaseDirectory = "assets"
-	mergingConfig.WritePath = "assets/merging_dir"
-	mergingConfig.FileName = "2.png"
+	mergingConfig.BaseDirectory = brokenBaseDir
+	mergingConfig.WritePath = mergeBaseDir
+	mergingConfig.FileName = filename
 	mergingConfig.ReadingOrder = names
 
 	divmer.ReadAndMerge(mergingConfig)
