@@ -24,17 +24,14 @@ func main() {
 	for index, value := range c {
 		fmt.Println(index, value)
 	}
+	names := core.GetOriginalNameList(c)
+
+	var mergingConfig divmer.ReadAndMergeConfig
+
+	mergingConfig.BaseDirectory = "assets"
+	mergingConfig.WritePath = "assets/merging_dir"
+	mergingConfig.FileName = "2.png"
+	mergingConfig.ReadingOrder = names
+
+	divmer.ReadAndMerge(mergingConfig)
 }
-
-// func main() {
-// 	logfile, _ := os.Create("logs")
-// 	defer logfile.Close()
-// 	var mergingConfig divmer.ReadAndMergeConfig
-
-// 	mergingConfig.BaseDirectory = "assets"
-// 	mergingConfig.FileName = "2.png"
-// 	mergingConfig.OutputRef = logfile
-// 	mergingConfig.MetadataSize = 0
-
-// 	divmer.ReadAndMerge(mergingConfig)
-// }
