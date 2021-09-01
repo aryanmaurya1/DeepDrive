@@ -10,6 +10,7 @@ import (
 func ReadFile(filepath string) []byte {
 	file, err := os.OpenFile(filepath, os.O_RDONLY, os.FileMode(1))
 	checkError(err)
+	defer file.Close()
 	fileStat, err := file.Stat()
 	checkError(err)
 	fileSize := fileStat.Size()

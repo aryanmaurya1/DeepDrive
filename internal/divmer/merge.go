@@ -7,13 +7,13 @@ import (
 )
 
 type ReadAndMergeConfig struct {
-	MetadataSize  int                 `json:"metadata"`
-	WritePath     string              `json:"writePath"`
-	BaseDirectory string              `json:"baseDirectory"`
-	FileName      string              `json:"filename"`
-	ReadingOrder  []string            `json:"readingOrder"` // Order in which read of files must be performed
-	OutputRef     *os.File            `json:"-"`
-	PipeFn        func([]byte) []byte `json:"-"`
+	MetadataSize  int                 `json:"metadataSize"`  // Size of metadata which is prepended in each file chunk
+	WritePath     string              `json:"writePath"`     // Path to the folder in which combined file must be written
+	BaseDirectory string              `json:"baseDirectory"` // Base directory inside which the folder lies, which contains the broken chunks
+	FileName      string              `json:"filename"`      // Name of the file which will store merged chunks
+	ReadingOrder  []string            `json:"readingOrder"`  // Order in which read of the chunks must be performed
+	OutputRef     *os.File            `json:"-"`             // Output file reference for writing logs
+	PipeFn        func([]byte) []byte `json:"-"`             // Function through which every chunk will be passed before merging into a big file
 }
 
 func ReadAndMerge(config ReadAndMergeConfig) *os.File {
