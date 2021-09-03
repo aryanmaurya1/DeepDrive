@@ -1,6 +1,7 @@
 package server
 
 import (
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -26,18 +27,28 @@ func UploadFile(w http.ResponseWriter, r *http.Request) {
 
 	userid := r.FormValue("userid")
 	file, header, err := r.FormFile("file")
-	checkError(err)
+	if e := checkError(err, w); e != nil {
+		json.NewEncoder(w).Encode(e)
+		return
+	}
 	defer file.Close()
 
 	fmt.Fprintf(OutputRef, "%s \n", userid) // Currently Just writing it to OutputRef
 	fileData, err := ioutil.ReadAll(file)
-	checkError(err)
+	if e := checkError(err, w); e != nil {
+		json.NewEncoder(w).Encode(e)
+		return
+	}
 
 	actualFileName := header.Filename
-	go core.WriteToFile(fileData, path.Join(FILE_UPLOAD_PATH, actualFileName))
+	err = core.WriteToFile(fileData, path.Join(FILE_UPLOAD_PATH, actualFileName))
+	if e := checkError(err, w); e != nil {
+		json.NewEncoder(w).Encode(e)
+		return
+	}
 
-	response := `{msg:"file upload success", "result":"success"}`
-	fmt.Fprint(w, response)
+	response := SuccessResponse{Result: "success", Msg: "File upload sucessfull"}
+	json.NewEncoder(w).Encode(response)
 }
 
 func InitRoutes() *mux.Router {
