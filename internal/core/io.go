@@ -24,9 +24,10 @@ func ReadFile(filepath string) []byte {
 	return buffer
 }
 
-func WriteToFile(data []byte, filepath string) *os.File {
+func WriteToFile(data []byte, filepath string) {
 	file, err := os.Create(filepath)
 	checkError(err)
+	defer file.Close()
 
 	n, err := file.Write(data)
 	checkError(err)
@@ -34,5 +35,5 @@ func WriteToFile(data []byte, filepath string) *os.File {
 	if n != len(data) {
 		log.Fatalf("Error in writing complete data, total len : %d Written len : %d", len(data), n)
 	}
-	return file
+
 }

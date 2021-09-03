@@ -27,6 +27,7 @@ func UploadFile(w http.ResponseWriter, r *http.Request) {
 	userid := r.FormValue("userid")
 	file, header, err := r.FormFile("file")
 	checkError(err)
+	defer file.Close()
 
 	fmt.Fprintf(OutputRef, "%s \n", userid) // Currently Just writing it to OutputRef
 	fileData, err := ioutil.ReadAll(file)
@@ -42,6 +43,6 @@ func UploadFile(w http.ResponseWriter, r *http.Request) {
 func InitRoutes() *mux.Router {
 	var r = mux.NewRouter()
 	r.HandleFunc("/", IndexHandler).Methods("GET")
-	r.HandleFunc("/upload", UploadFile).Methods("POST")
+	r.HandleFunc("/api/upload", UploadFile).Methods("POST")
 	return r
 }
