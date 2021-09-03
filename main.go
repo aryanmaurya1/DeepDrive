@@ -1,11 +1,11 @@
 package main
 
 import (
-	"fmt"
-	"time"
+	"net/http"
+	"ourtool/internal/server"
 )
 
 func main() {
-	s := time.Now().UnixNano()
-	fmt.Println(s)
+	r := server.InitRoutes()
+	http.ListenAndServe(":8080", r)
 }
