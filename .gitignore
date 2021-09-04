@@ -1,6 +1,5 @@
-constructed_img.png
-assets/*/**
-broken
-merged
-original
+files
+files/broken/*/**
+files/merged/*/**
+files/original/*/**
 logs
