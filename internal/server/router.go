@@ -12,7 +12,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-const FILE_UPLOAD_PATH = "original"
+const FILE_UPLOAD_PATH = "files/original"
 
 var OutputRef = os.Stdout
 
@@ -27,22 +27,22 @@ func UploadFile(w http.ResponseWriter, r *http.Request) {
 
 	userid := r.FormValue("userid")
 	file, header, err := r.FormFile("file")
-	if e := checkError(err, w); e != nil {
+	if e := checkError(err); e != nil {
 		json.NewEncoder(w).Encode(e)
 		return
 	}
 	defer file.Close()
 
-	fmt.Fprintf(OutputRef, "%s \n", userid) // Currently Just writing it to OutputRef
+	fmt.Fprintf(OutputRef, "USERID : %s \n", userid) // Currently Just writing it to OutputRef
 	fileData, err := ioutil.ReadAll(file)
-	if e := checkError(err, w); e != nil {
+	if e := checkError(err); e != nil {
 		json.NewEncoder(w).Encode(e)
 		return
 	}
 
 	actualFileName := header.Filename
 	err = core.WriteToFile(fileData, path.Join(FILE_UPLOAD_PATH, actualFileName))
-	if e := checkError(err, w); e != nil {
+	if e := checkError(err); e != nil {
 		json.NewEncoder(w).Encode(e)
 		return
 	}

@@ -4,3 +4,4 @@ files/merged/*/**
 files/original/*/**
 logs
 database.yml
+.vscode
