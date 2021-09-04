@@ -3,3 +3,4 @@ files/broken/*/**
 files/merged/*/**
 files/original/*/**
 logs
+database.yml
