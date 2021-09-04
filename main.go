@@ -7,5 +7,6 @@ import (
 
 func main() {
 	r := server.InitRoutes()
-	http.ListenAndServe(":8080", r)
+	r.Use(server.Logger) // Attaching the middleware
+	http.ListenAndServe("0.0.0.0:8080", r)
 }

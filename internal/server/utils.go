@@ -2,7 +2,6 @@ package server
 
 import (
 	"log"
-	"net/http"
 	"os"
 )
 
@@ -21,7 +20,7 @@ func SetOutputRef(o *os.File) {
 	OutputRef = o
 }
 
-func checkError(err error, w http.ResponseWriter) *CustomError {
+func checkError(err error) *CustomError {
 	var customErr *CustomError = nil
 	if err != nil {
 		log.Println(err.Error())
