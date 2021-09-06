@@ -9,6 +9,7 @@ type User struct {
 	CreatedAt time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"created_at"`
 	UpdatedAt time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"updated_at"`
 	Name      string    `json:"name"`
+	Email     string    `json:"email"`
 	Username  string    `gorm:"not null;unique" json:"username"`
 	Key       string    `json:"key"`
 	Password  string    `json:"password"`

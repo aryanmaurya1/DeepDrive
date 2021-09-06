@@ -13,3 +13,11 @@ func Logger(h http.Handler) http.Handler {
 		h.ServeHTTP(w, r)
 	})
 }
+
+// ContentTypeJson : Sets the header Content-type to application/json
+func ContentTypeJson(h http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-type", "application/json")
+		h.ServeHTTP(w, r)
+	})
+}

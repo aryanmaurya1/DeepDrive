@@ -1,8 +1,11 @@
 package server
 
 import (
+	"errors"
+	"fmt"
 	"log"
 	"os"
+	"ourtool/internal/db"
 )
 
 type CustomError struct {
@@ -27,4 +30,32 @@ func checkError(err error) *CustomError {
 		customErr = &CustomError{Result: "fail", Msg: err.Error()}
 	}
 	return customErr
+}
+
+func ValidateUserDetails(user db.User) *CustomError {
+
+	if len(user.Name) == 0 {
+		if e := checkError(errors.New("please provide a name")); e != nil {
+			return e
+		}
+	}
+
+	if len(user.Username) == 0 {
+		if e := checkError(fmt.Errorf("please provide a username")); e != nil {
+			return e
+		}
+	}
+
+	if len(user.Email) == 0 {
+		if e := checkError(fmt.Errorf("please provide a email")); e != nil {
+			return e
+		}
+	}
+
+	if len(user.Password) == 0 {
+		if e := checkError(fmt.Errorf("please provide a password")); e != nil {
+			return e
+		}
+	}
+	return nil
 }
