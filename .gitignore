@@ -5,3 +5,4 @@ files/original/*/**
 logs
 database.yml
 .vscode
+.env
