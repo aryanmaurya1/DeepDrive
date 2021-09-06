@@ -4,10 +4,13 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"math/rand"
 	"net/http"
 	"os"
 	"ourtool/internal/core"
+	"ourtool/internal/db"
 	"path"
+	"time"
 
 	"github.com/gorilla/mux"
 )
@@ -20,6 +23,36 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-type", "application/json")
 	response := `{"msg":"Welcome to OurTool"}`
 	fmt.Fprint(w, response)
+}
+
+func CreateUser(w http.ResponseWriter, r *http.Request) {
+
+	var user db.User
+	json.NewDecoder(r.Body).Decode(&user)
+
+	err := ValidateUserDetails(user) // from utils
+	if err != nil {
+		json.NewEncoder(w).Encode(err)
+		return
+	}
+
+	// every user will get unique key
+	hashedPassword, errr := Hash(user.Password)
+	if errr != nil {
+		json.NewEncoder(w).Encode(SuccessResponse{"fail", errr.Error()})
+		return
+	}
+
+	user.Password = string(hashedPassword)
+	user.Key = fmt.Sprintf("%d_%d", time.Now().UnixNano(), rand.Int())
+
+	errr = db.DB_CONNECTION.Debug().Create(&user).Error
+	if errr != nil {
+		json.NewEncoder(w).Encode(CustomError{"fail", errr.Error()})
+		return
+	}
+	json.NewEncoder(w).Encode(SuccessResponse{"success", "user created"})
+
 }
 
 func UploadFile(w http.ResponseWriter, r *http.Request) {
@@ -54,6 +87,7 @@ func UploadFile(w http.ResponseWriter, r *http.Request) {
 func InitRoutes() *mux.Router {
 	var r = mux.NewRouter()
 	r.HandleFunc("/", IndexHandler).Methods("GET")
+	r.HandleFunc("/api/user/create", CreateUser).Methods("POST")
 	r.HandleFunc("/api/upload", UploadFile).Methods("POST")
 	return r
 }
