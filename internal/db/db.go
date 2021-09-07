@@ -9,6 +9,8 @@ import (
 	"gorm.io/gorm"
 )
 
+var DB_CONNECTION *gorm.DB = nil
+
 // GetConnection : Read database credentials fron env variables. Gives connection object to database.
 func GetConnection() (*gorm.DB, error) {
 	host := os.Getenv("DB_HOST")
